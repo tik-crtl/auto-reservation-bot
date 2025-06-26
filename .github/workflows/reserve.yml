@@ -22,11 +22,17 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y wget unzip
+          
+          # Chromeのダウンロードと展開
           wget https://storage.googleapis.com/chrome-for-testing-public/122.0.6261.111/linux64/chrome-linux64.zip
           unzip chrome-linux64.zip
           sudo mv chrome-linux64 /opt/chrome
+
+          # 既存のgoogle-chromeリンクを削除してから作成
+          sudo rm -f /usr/bin/google-chrome
           sudo ln -s /opt/chrome/chrome /usr/bin/google-chrome
 
+          # ChromeDriverのダウンロードと展開
           wget https://storage.googleapis.com/chrome-for-testing-public/122.0.6261.111/linux64/chromedriver-linux64.zip
           unzip chromedriver-linux64.zip
           sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
