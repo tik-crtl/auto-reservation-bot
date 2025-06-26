@@ -1,0 +1,29 @@
+name: Auto Reserve at Midnight
+
+on:
+  schedule:
+    - cron: '0 15 * * *'  # JST 0:00（UTC 15:00）
+  workflow_dispatch:
+
+jobs:
+  run-reservation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome*.deb
+      - name: Install ChromeDriver
+        run: |
+          wget -N https://chromedriver.storage.googleapis.com/$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -1)/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+      - name: Run script
+        run: python auto_reserve_tanaka.py
